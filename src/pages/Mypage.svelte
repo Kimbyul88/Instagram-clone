@@ -31,9 +31,15 @@
   };
 
   $: posts = [];
+  $: users = [];
+
+  let user_name;
+  let user_desc;
+  let user_imgUrl;
 
   const db = getDatabase();
   const postRef = ref(db, "posts/");
+  const userRef = ref(db, "users/");
 
   onMount(() => {
     onValue(postRef, (snapshot) => {
@@ -41,6 +47,15 @@
       if (data !== null) {
         posts = Object.values(data);
       }
+    });
+    onValue(userRef, (snapshot) => {
+      const data_user = snapshot.val();
+      if (data_user !== null) {
+        users = Object.values(data_user);
+      }
+      user_name = users[0].name;
+      user_desc = users[0].desc;
+      user_imgUrl = users[0].imgUrl;
     });
   });
 
@@ -74,7 +89,7 @@
     <div class="profile-bar">
       <div class="profile-bar__profile">
         <div class="profile-image">
-          <img src="../dist/bear.jpg" alt="profile" />
+          <img src={user_imgUrl} alt="profile" />
         </div>
       </div>
       <div class="profile-plusbutton">+</div>
@@ -95,11 +110,11 @@
       </div>
     </div>
     <div class="name-bar">
-      <div class="name-bar__name">슈퍼코딩 Super Coding</div>
-      <div class="name-bar__desc">파이널 프로젝트 🚀</div>
+      <div class="name-bar__name">{user_name}</div>
+      <div class="name-bar__desc">{user_desc}</div>
     </div>
     <div class="edit-bar">
-      <div class="edit-bar__profile-edit">프로필 편집</div>
+      <a href="#/profileedit" class="edit-bar__profile-edit">프로필 편집</a>
       <div class="edit-bar__profile-share">프로필 공유</div>
       <div class="edit-bar__recommend">+</div>
     </div>
@@ -194,7 +209,7 @@
   .gallery-post__img {
     width: 30vw;
     height: 30vw;
-    border-radius: 3px;
+    border-radius: 5px;
     margin: 0.5px;
     overflow: hidden;
   }

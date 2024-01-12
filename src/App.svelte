@@ -9,6 +9,7 @@
   import { wrap } from "svelte-spa-router/wrap";
   import "./css/style.css";
   import Editpage from "./routes/Editpage.svelte";
+  import ProfileEdit from "./routes/ProfileEdit.svelte";
 
   let title;
 
@@ -16,6 +17,7 @@
     "/": Mypage,
     "/mypage": Mypage,
     "/write": Write,
+    "/profileedit": ProfileEdit,
     "/editpage/:postAt": wrap({
       asyncComponent: () => import("./routes/Editpage.svelte"),
       // // Static props

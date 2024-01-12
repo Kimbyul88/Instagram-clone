@@ -79,6 +79,7 @@
 </script>
 
 <Timebar />
+
 <div class="detailpage-main">
   <div class="detail-infobar">
     <a href="/#/mypage" class="detail-previous">
@@ -96,8 +97,11 @@
   <div class="detailpage-main__img">
     <img src={imgUrl} alt="이미지" />
   </div>
-  <div class="detail-heart">
+  <div class="detail-iconBox">
     <img src="../dist/assets/heart.svg" alt="" />
+    <button id="comment-btn">
+      <img src="../dist/assets/comment.svg" alt="" />
+    </button>
   </div>
   <div class="detailpage-main__textBox">
     <div class="textBox-upBox">
@@ -110,8 +114,136 @@
     <div class="detailpage-main__postAt">{calcTime(postAt)}</div>
   </div>
 </div>
+<div class="detailpage-comment">
+  <div class="comment-title">
+    <img src="../dist/assets/x.svg" alt="x" />
+    <div>댓글</div>
+  </div>
+  <div class="comment-list">
+    <div class="comment-list-one">
+      <div class="comment-list-circle"></div>
+      <div class="one-text">
+        <div class="cmt-nickname">익명</div>
+        <div class="cmt-detail">너무 멋져요!</div>
+      </div>
+    </div>
+    <div class="comment-list-one">
+      <div class="comment-list-circle"></div>
+      <div class="one-text">
+        <div class="cmt-nickname">익명</div>
+        <div class="cmt-detail">너무 멋져요!</div>
+      </div>
+    </div>
+    <div class="comment-list-one">
+      <div class="comment-list-circle"></div>
+      <div class="one-text">
+        <div class="cmt-nickname">익명</div>
+        <div class="cmt-detail">너무 멋져요!</div>
+      </div>
+    </div>
+  </div>
+  <form>
+    <input type="text" placeholder="닉네임" />
+    <input type="text" placeholder="내용" />
+    <button type="submit">쓰기</button>
+  </form>
+</div>
 
 <style>
+  form {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  input {
+    margin-right: 10px;
+    width: 30%;
+  }
+  .one-text {
+    margin-left: 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: start;
+  }
+  .comment-list-circle {
+    background-color: rgb(166, 166, 166);
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    margin: 0 0 0 10px;
+  }
+  .cmt-nickname {
+    font-size: 12px;
+    font-weight: bold;
+  }
+  .cmt-detail {
+    margin-top: 3px;
+    font-weight: 300;
+    font-size: 16px;
+  }
+  .comment-list-one {
+    height: 40px;
+    width: 100%;
+    padding: 5px 0 5px 0;
+    margin: 7px 10px 5px 10px;
+    display: flex;
+    /* flex-direction: column; */
+    justify-content: start;
+    align-items: center;
+    border-bottom: 1px dotted gray;
+  }
+  .comment-list {
+    width: 90%;
+    height: 85%;
+    display: flex;
+    flex-direction: column;
+    justify-content: start;
+    align-items: center;
+    /* border: 2px solid purple; */
+    margin-top: 2px;
+  }
+  #comment-btn {
+    border: none;
+    background-color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .detailpage-comment {
+    font-family: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo",
+      "Pretendard Variable", Pretendard, Roboto, "Noto Sans KR", "Segoe UI",
+      "Malgun Gothic", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol",
+      sans-serif;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: start;
+    margin-top: 10px;
+    border: 1px solid gray;
+    width: 80vw;
+    height: 50vh;
+    padding-bottom: 7px;
+    transform: translate(7vw, 0);
+  }
+  .comment-title img {
+    transform: translate(5px, 0);
+    width: 25px;
+  }
+  .comment-title div {
+    transform: translate(-37vw, 0);
+  }
+  .comment-title {
+    padding-bottom: 6px;
+    border-bottom: 1px solid gray;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 10px;
+    font-weight: 600;
+    font-size: 15px;
+  }
   .infobar-edit {
     border: none;
     padding: 5px 10px 5px 10px;
@@ -185,19 +317,13 @@
     width: 50vw;
     height: auto;
   }
-  .detail-heart img {
+  .detail-iconBox img {
     width: 30px;
     margin-right: 5px;
   }
-  .detail-heart {
-    color: white;
-    font-style: italic;
+  .detail-iconBox {
     display: flex;
     align-items: center;
-    /* justify-content: center; */
-    font-size: 13px;
-    width: 60px;
-    height: 30px;
   }
   .detailpage-main__textBox {
     margin-top: 10px;

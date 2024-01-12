@@ -100,7 +100,7 @@
   width: 14px;
   height: 14px;
   position: absolute;
-  left: 65px;
+  left: 70px;
   bottom: 5px;
   color: white;
   background-color: RGB(1, 148, 246);
@@ -176,6 +176,8 @@
   background-color: orange;
 }
 .edit-bar__profile-edit {
+  color: black;
+  text-decoration-line: none;
   display: flex;
   align-items: center;
   justify-content: center;
