@@ -1,0 +1,9 @@
+@import "main.css";
+@import "footer.css";
+
+.header {
+  padding-top: 20px;
+  margin-top: 15px;
+  display: flex;
+  align-items: center;
+}
