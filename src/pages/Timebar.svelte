@@ -1,15 +1,17 @@
 <script>
-  let min = new Date().getMinutes();
-  let hour = new Date().getHours();
-  let sec = new Date().getSeconds();
-  let time = new Date().getTime();
-  let minStr, hourStr;
+  let curTime = new Date();
+  let min = curTime.getMinutes();
+  let hour = curTime.getHours();
+  let sec = curTime.getSeconds();
+  let time = curTime.getTime();
+  let hourStr;
+  let minStr = "";
 
   setInterval(
     () => (
       (time = time + 1000),
       (min = new Date(time).getMinutes()),
-      (hour = new Date(time).getHours() % 12),
+      (hour = new Date(time).getHours()),
       (sec = new Date(time).getSeconds()),
       (minStr = String(min).padStart(2, "0"))
     ),

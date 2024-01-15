@@ -16,15 +16,16 @@
 
   const calcTime = (timestamp) => {
     //한국시간 UTC+9
-    const curTime = new Date().getTime() - 9 * 60 * 60 * 1000;
+    const curTime = new Date().getTime() - 60 * 60 * 1000;
     const time = new Date(curTime - timestamp);
     const hour = time.getHours();
     const minute = time.getMinutes();
     const second = time.getSeconds();
-
-    if (hour > 0 && hour < 24) return `${hour}시간 전`;
-    else if (hour >= 24)
-      return `${time.getFullYear()}년 ${time.getMonth()}월 ${time.getDay()}일`;
+    if (curTime - timestamp >= 24 * 60 * 60 * 1000)
+      return `${new Date(timestamp).getFullYear()}년 ${
+        new Date(timestamp).getMonth() + 1
+      }월 ${new Date(timestamp).getDate()}일`;
+    else if (hour > 0 && hour < 24) return `${hour}시간 전`;
     else if (minute > 0) return `${minute}분 전`;
     else if (second > 0) return `${second}초 전`;
     else return "방금 전";
@@ -72,7 +73,7 @@
   <header class="mypage-header">
     <div class="id-bar">
       <div class="id-bar__idBox">
-        <div class="idBox-id">super_coding24</div>
+        <div class="idBox-id">wade_wave</div>
         <div class="idBox-icons">
           <img src="assets/arrow.svg" alt="" />
           <div class="idBox-icons__redCircle"></div>

@@ -7,10 +7,18 @@
 </script>
 
 <script>
-  import { getDatabase, ref, onValue, remove } from "firebase/database";
+  import {
+    getDatabase,
+    ref,
+    onValue,
+    remove,
+    update,
+    push,
+  } from "firebase/database";
   import { detail_postAt } from "../pages/Mypage.svelte";
   import Timebar from "../pages/Timebar.svelte";
   import { getStorage, ref as stref, deleteObject } from "firebase/storage";
+  import { onMount } from "svelte";
 
   exportpostAt(detail_postAt);
   // console.log("Received ID:", title);
@@ -18,31 +26,50 @@
     window.location.hash = `#/editpage/:${detail_postAt}`;
   };
 
+  const handleCommentBtn = (event) => {
+    const HIDDEN_CLASSNAME = "hidden";
+    const btn = document.querySelector(".comment-btn");
+    const commentBlock = document.querySelector(".detailpage-comment");
+    if (commentBlock.classList.contains(HIDDEN_CLASSNAME)) {
+      commentBlock.classList.remove(HIDDEN_CLASSNAME);
+    } else {
+      commentBlock.classList.add(HIDDEN_CLASSNAME);
+    }
+  };
+
   const calcTime = (timestamp) => {
     //한국시간 UTC+9
-    const curTime = new Date().getTime() - 9 * 60 * 60 * 1000;
-    const time = new Date(curTime - timestamp);
+    const stamp = parseInt(timestamp);
+    const curTime = new Date().getTime() - 60 * 60 * 1000;
+    const time = new Date(curTime - stamp);
     const hour = time.getHours();
     const minute = time.getMinutes();
     const second = time.getSeconds();
-
-    if (hour > 0 && hour < 24) return `${hour}시간 전`;
-    else if (hour >= 24)
-      return `${time.getFullYear()}년 ${time.getMonth()}월 ${time.getDay()}일`;
+    if (curTime - stamp >= 24 * 60 * 60 * 1000)
+      return `${new Date(stamp).getFullYear()}년 ${
+        new Date(stamp).getMonth() + 1
+      }월 ${new Date(stamp).getDate()}일`;
+    else if (hour > 0 && hour < 24) return `${hour}시간 전`;
     else if (minute > 0) return `${minute}분 전`;
     else if (second > 0) return `${second}초 전`;
     else return "방금 전";
   };
+
   let imgUrl;
   let title;
   let writer;
   let postAt = detail_postAt;
   let detail;
+  //
+  let nickname;
+  let contents;
+  //
   const db = getDatabase();
   const postRef = ref(db, "posts/");
-  // console.log("title:", title);
+  const commentRef = ref(db, "comments/" + postAt);
 
   $: posts = [];
+  $: comments = [];
   let targetPost;
 
   onValue(postRef, (snapshot) => {
@@ -69,12 +96,28 @@
       posts.forEach((post) => {
         if (postAt === `${post.postAt}`) {
           remove(ref(db, "posts/" + `${post.writer}` + `${post.postAt}`));
+          new Date();
         }
       });
       window.location.hash = `#/mypage`;
     } else {
       window.location.hash = `#/detailpage/:${detail_postAt}`;
     }
+  };
+  onMount(() => {
+    onValue(commentRef, (snapshot) => {
+      const data = snapshot.val();
+      if (data !== null) {
+        comments = Object.values(data);
+        console.log(comments);
+      }
+    });
+  });
+  const handleCommentWrite = () => {
+    push(ref(db, "comments/" + postAt), {
+      nickname,
+      contents,
+    });
   };
 </script>
 
@@ -99,7 +142,7 @@
   </div>
   <div class="detail-iconBox">
     <img src="../dist/assets/heart.svg" alt="" />
-    <button id="comment-btn">
+    <button on:click={handleCommentBtn} id="comment-btn" class="comment-btn">
       <img src="../dist/assets/comment.svg" alt="" />
     </button>
   </div>
@@ -111,41 +154,43 @@
     <div class="detailpage-main__detail" style="word-break:break-all">
       {detail}
     </div>
-    <div class="detailpage-main__postAt">{calcTime(postAt)}</div>
+    <div class="detailpage-main__postAt">{calcTime(detail_postAt)}</div>
   </div>
 </div>
-<div class="detailpage-comment">
+<div class="detailpage-comment hidden">
   <div class="comment-title">
     <img src="../dist/assets/x.svg" alt="x" />
     <div>댓글</div>
   </div>
-  <div class="comment-list">
-    <div class="comment-list-one">
-      <div class="comment-list-circle"></div>
-      <div class="one-text">
-        <div class="cmt-nickname">익명</div>
-        <div class="cmt-detail">너무 멋져요!</div>
+  {#each posts as post}
+    <div class="comment-list">
+      <div class="comment-list-one">
+        <div class="comment-list-circle"></div>
+        <div class="list-one__text">
+          <div class="cmt-nickname">{nickname}</div>
+          <div class="cmt-detail">{contents}</div>
+        </div>
       </div>
     </div>
-    <div class="comment-list-one">
-      <div class="comment-list-circle"></div>
-      <div class="one-text">
-        <div class="cmt-nickname">익명</div>
-        <div class="cmt-detail">너무 멋져요!</div>
-      </div>
-    </div>
-    <div class="comment-list-one">
-      <div class="comment-list-circle"></div>
-      <div class="one-text">
-        <div class="cmt-nickname">익명</div>
-        <div class="cmt-detail">너무 멋져요!</div>
-      </div>
-    </div>
-  </div>
+  {/each}
   <form>
-    <input type="text" placeholder="닉네임" />
-    <input type="text" placeholder="내용" />
-    <button type="submit">쓰기</button>
+    <input
+      bind:value={nickname}
+      id="nickname"
+      name="nickname"
+      type="text"
+      placeholder="닉네임"
+    />
+    <input
+      bind:value={contents}
+      id="contents"
+      name="contents"
+      type="text"
+      placeholder="내용"
+    />
+    <button type="submit" on:click|preventDefault={handleCommentWrite}
+      >쓰기</button
+    >
   </form>
 </div>
 
@@ -153,13 +198,22 @@
   form {
     display: flex;
     justify-content: center;
-    align-items: center;
+    align-items: start;
+    position: fixed;
+    bottom: 0;
+    left: 5vw;
+  }
+  #nickname {
+    width: 15vw;
+  }
+  #contents {
+    width: 40vw;
   }
   input {
     margin-right: 10px;
     width: 30%;
   }
-  .one-text {
+  .list-one__text {
     margin-left: 10px;
     display: flex;
     flex-direction: column;
@@ -209,13 +263,14 @@
     display: flex;
     align-items: center;
     justify-content: center;
+    cursor: pointer;
   }
   .detailpage-comment {
     font-family: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo",
       "Pretendard Variable", Pretendard, Roboto, "Noto Sans KR", "Segoe UI",
       "Malgun Gothic", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol",
       sans-serif;
-    display: flex;
+    display: block;
     flex-direction: column;
     align-items: center;
     justify-content: start;
@@ -225,10 +280,16 @@
     height: 50vh;
     padding-bottom: 7px;
     transform: translate(7vw, 0);
+    /* transition: trnasform 5s ease-in-out; */
+  }
+  .comment-title {
+    width: 100%;
   }
   .comment-title img {
     transform: translate(5px, 0);
     width: 25px;
+    /* display: none; */
+    opacity: 0;
   }
   .comment-title div {
     transform: translate(-37vw, 0);
@@ -356,5 +417,8 @@
     font-size: 13px;
     font-weight: 300;
     margin-top: 5px;
+  }
+  .hidden {
+    display: none;
   }
 </style>
