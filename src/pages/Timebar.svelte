@@ -7,16 +7,15 @@
   let hourStr;
   let minStr = "";
 
-  setInterval(
-    () => (
-      (time = time + 1000),
-      (min = new Date(time).getMinutes()),
-      (hour = new Date(time).getHours()),
-      (sec = new Date(time).getSeconds()),
-      (minStr = String(min).padStart(2, "0"))
-    ),
-    1000
-  );
+  function timeBar() {
+    time = time + 1000;
+    min = new Date(time).getMinutes();
+    hour = new Date(time).getHours();
+    sec = new Date(time).getSeconds();
+    minStr = String(min).padStart(2, "0");
+  }
+  timeBar();
+  setInterval(timeBar, 1000);
 </script>
 
 <div class="time-bar">
