@@ -118,6 +118,8 @@
       nickname,
       contents,
     });
+    nickname = "";
+    contents = "";
   };
 </script>
 
@@ -162,17 +164,17 @@
     <img src="../dist/assets/x.svg" alt="x" />
     <div>댓글</div>
   </div>
-  {#each posts as post}
-    <div class="comment-list">
+  <div class="comment-list">
+    {#each comments as comment}
       <div class="comment-list-one">
         <div class="comment-list-circle"></div>
         <div class="list-one__text">
-          <div class="cmt-nickname">{nickname}</div>
-          <div class="cmt-detail">{contents}</div>
+          <div class="cmt-nickname">{comment.nickname}</div>
+          <div class="cmt-detail">{comment.contents}</div>
         </div>
       </div>
-    </div>
-  {/each}
+    {/each}
+  </div>
   <form>
     <input
       bind:value={nickname}
