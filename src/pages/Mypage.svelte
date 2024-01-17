@@ -46,7 +46,7 @@
     onValue(postRef, (snapshot) => {
       const data = snapshot.val();
       if (data !== null) {
-        posts = Object.values(data);
+        posts = Object.values(data).reverse();
       }
     });
     onValue(userRef, (snapshot) => {
@@ -73,9 +73,12 @@
   <header class="mypage-header">
     <div class="id-bar">
       <div class="id-bar__idBox">
-        <div class="idBox-id">wade_wave</div>
+        <!-- <div class="idBox-id">wade_wave</div> -->
+        <select name="pets" id="idBox-id">
+          <option value="">wade_wave</option>
+        </select>
         <div class="idBox-icons">
-          <img src="assets/arrow.svg" alt="" />
+          <!-- <img src="assets/arrow.svg" alt="" /> -->
           <div class="idBox-icons__redCircle"></div>
         </div>
       </div>
@@ -154,10 +157,11 @@
   </main>
 </div>
 <footer></footer>
-<div class="media-info-msg">화면 사이즈를 줄여주세요</div>
+
+<!-- <div class="media-info-msg">화면 사이즈를 줄여주세요</div> -->
 
 <style>
-  .media-info-msg {
+  /* .media-info-msg {
     font-family: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo",
       "Pretendard Variable", Pretendard, Roboto, "Noto Sans KR", "Segoe UI",
       "Malgun Gothic", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol",
@@ -172,14 +176,15 @@
     justify-content: center;
     align-items: center;
     font-size: 80px;
-    /* padding-top: 20vh; */
-  }
+    padding-top: 20vh;
+   } */
 
+  /* 
   @media screen and (max-width: 600px) {
     .media-info-msg {
       display: none;
     }
-  }
+  } */
   .bodybody {
     display: flex;
     justify-content: center;
@@ -228,4 +233,12 @@
     font-size: 12px;
     font-weight: 800;
   } */
+  select {
+    border: none;
+    font-size: 20px;
+    font-weight: 700;
+  }
+  select:hover {
+    opacity: 0.5;
+  }
 </style>

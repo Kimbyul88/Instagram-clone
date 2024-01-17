@@ -21,7 +21,6 @@
   import { onMount } from "svelte";
 
   exportpostAt(detail_postAt);
-  // console.log("Received ID:", title);
   const goEditPage = () => {
     window.location.hash = `#/editpage/:${detail_postAt}`;
   };
@@ -109,17 +108,35 @@
       const data = snapshot.val();
       if (data !== null) {
         comments = Object.values(data);
-        console.log(comments);
       }
     });
   });
-  const handleCommentWrite = () => {
-    push(ref(db, "comments/" + postAt), {
-      nickname,
-      contents,
-    });
+  const handleCommentWrite = (event) => {
+    update(
+      ref(db, "comments/" + postAt + "/" + String(parseInt(event.timeStamp))),
+      {
+        commentAt: parseInt(event.timeStamp),
+        nickname,
+        contents,
+      }
+    );
     nickname = "";
     contents = "";
+  };
+  const handleCommentDelete = (event) => {
+    if (confirm("이 댓글을 삭제하시겠습니까?")) {
+      onValue(commentRef, (snapshot) => {
+        const data = snapshot.val();
+        if (data !== null) {
+          comments = Object.values(data);
+        }
+      });
+      comments.forEach((comment) => {
+        if (event.target.id === `${comment.nickname}${comment.contents}`) {
+          remove(ref(db, "comments/" + postAt + "/" + `${comment.commentAt}`));
+        }
+      });
+    }
   };
 </script>
 
@@ -172,6 +189,11 @@
           <div class="cmt-nickname">{comment.nickname}</div>
           <div class="cmt-detail">{comment.contents}</div>
         </div>
+        <button
+          class="comment-delete"
+          id={comment.nickname + comment.contents}
+          on:click={handleCommentDelete}>삭제</button
+        >
       </div>
     {/each}
   </div>
@@ -239,6 +261,7 @@
     font-size: 16px;
   }
   .comment-list-one {
+    transform: translate(3vw, 0);
     height: 40px;
     width: 100%;
     padding: 5px 0 5px 0;
@@ -258,6 +281,7 @@
     align-items: center;
     /* border: 2px solid purple; */
     margin-top: 2px;
+    position: relative;
   }
   #comment-btn {
     border: none;
@@ -266,6 +290,9 @@
     align-items: center;
     justify-content: center;
     cursor: pointer;
+  }
+  #comment-btn:hover {
+    opacity: 0.5;
   }
   .detailpage-comment {
     font-family: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo",
@@ -422,5 +449,20 @@
   }
   .hidden {
     display: none;
+  }
+  .comment-delete {
+    position: absolute;
+    right: 0px;
+    border: none;
+    border-radius: 5px;
+    width: 43px;
+    height: 24px;
+    background-color: white;
+    font-weight: 500;
+    color: orangered;
+  }
+  .comment-delete:hover {
+    background-color: orangered;
+    color: white;
   }
 </style>

@@ -87,7 +87,7 @@
     justify-content: center;
     width: 100vw;
     padding: 10px 0 10px 0;
-    background-color: rgb(255, 192, 169);
+    background-color: rgb(241, 241, 241);
     /* border-bottom: 2px solid rgb(157, 149, 146); */
     font-size: 20px;
     margin-right: 10px;
