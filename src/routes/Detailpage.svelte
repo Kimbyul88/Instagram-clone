@@ -15,7 +15,7 @@
     update,
     push,
   } from "firebase/database";
-  import { detail_postAt } from "../pages/Mypage.svelte";
+  import { detail_postAt, detail_writer } from "../pages/Mypage.svelte";
   import Timebar from "../pages/Timebar.svelte";
   import { getStorage, ref as stref, deleteObject } from "firebase/storage";
   import { onMount } from "svelte";
@@ -64,8 +64,8 @@
   let contents;
   //
   const db = getDatabase();
-  const postRef = ref(db, "posts/");
-  const commentRef = ref(db, "comments/" + postAt);
+  const postRef = ref(db, "posts" + "/" + detail_writer);
+  const commentRef = ref(db, "comments" + "/" + detail_writer + "/" + postAt);
 
   $: posts = [];
   $: comments = [];
@@ -94,7 +94,9 @@
       });
       posts.forEach((post) => {
         if (postAt === `${post.postAt}`) {
-          remove(ref(db, "posts/" + `${post.writer}` + `${post.postAt}`));
+          remove(
+            ref(db, "posts" + "/" + detail_writer + "/" + `${post.postAt}`)
+          );
           new Date();
         }
       });
@@ -106,14 +108,23 @@
   onMount(() => {
     onValue(commentRef, (snapshot) => {
       const data = snapshot.val();
-      if (data !== null) {
+      if (data != null) {
         comments = Object.values(data);
       }
     });
   });
   const handleCommentWrite = (event) => {
     update(
-      ref(db, "comments/" + postAt + "/" + String(parseInt(event.timeStamp))),
+      ref(
+        db,
+        "comments" +
+          "/" +
+          detail_writer +
+          "/" +
+          postAt +
+          "/" +
+          String(parseInt(event.timeStamp))
+      ),
       {
         commentAt: parseInt(event.timeStamp),
         nickname,
@@ -133,7 +144,18 @@
       });
       comments.forEach((comment) => {
         if (event.target.id === `${comment.nickname}${comment.contents}`) {
-          remove(ref(db, "comments/" + postAt + "/" + `${comment.commentAt}`));
+          remove(
+            ref(
+              db,
+              "comments" +
+                "/" +
+                detail_writer +
+                "/" +
+                postAt +
+                "/" +
+                `${comment.commentAt}`
+            )
+          );
         }
       });
     }

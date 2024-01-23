@@ -2,11 +2,12 @@
   function handleDetailPage(event) {
     const clickedImg = document.querySelector(".gallery-post__img");
     detail_postAt = event.target.alt;
+    detail_writer = event.target.title;
     window.location.hash = `#/detailpage/:${detail_postAt}`;
-
-    return detail_postAt;
+    return { detail_postAt, detail_writer };
   }
   export let detail_postAt;
+  export let detail_writer;
 </script>
 
 <script>
@@ -147,7 +148,7 @@
       {#each posts as post}
         <div class="gallery-post">
           <button class="gallery-post__img" on:click={handleDetailPage}>
-            <img src={post.imgUrl} alt={post.postAt} />
+            <img src={post.imgUrl} alt={post.postAt} title={post.writer} />
           </button>
           <div class="gallery-post__textBox">
             <div class="gallery-post__writer">{"@" + post.writer}</div>

@@ -33,7 +33,7 @@
   const uploadFile = async () => {
     const file = files[0];
     const name = file.name;
-    const imgRef = refImage(storage, name);
+    const imgRef = refImage(storage, writer + "/" + name);
     const res = await uploadBytes(imgRef, file);
     const url = await getDownloadURL(imgRef);
     return url;
@@ -90,16 +90,6 @@
       bind:value={title}
     />
   </div>
-  <!-- <div>
-    <label for="writer">작성자</label>
-    <input
-      type="text"
-      id="writer"
-      name="writer"
-      placeholder="작성자 이름(아이디)을 입력해주세요"
-      bind:value={writer}
-    />
-  </div> -->
   <label for="writer">작성자</label>
   <select name="writer" id="writer" bind:value={writer}>
     <option value=" ">선택해주세요</option>

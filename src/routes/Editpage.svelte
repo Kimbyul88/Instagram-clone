@@ -10,7 +10,7 @@
     get,
     remove,
   } from "firebase/database";
-  import { detail_postAt } from "../pages/Mypage.svelte";
+  import { detail_postAt, detail_writer } from "../pages/Mypage.svelte";
   import { onMount } from "svelte";
   import { postAT } from "./Detailpage.svelte";
   import Timebar from "../pages/Timebar.svelte";
@@ -21,7 +21,7 @@
   let detail;
   let prevdetail;
   const db = getDatabase(); //데이터베이스 참조 가져오기
-  const postRef = ref(db, "posts/");
+  const postRef = ref(db, "posts" + "/" + detail_writer);
 
   $: posts = [];
   let targetPost;
@@ -35,10 +35,13 @@
       // console.log(ATAT, post.postAt.toString());
       if (ATAT === `${post.postAt}`) {
         prevdetail = post.detail;
-        update(ref(db, "posts/" + `${post.writer}` + `${post.postAt}`), {
-          title,
-          detail,
-        });
+        update(
+          ref(db, "posts" + "/" + detail_writer + "/" + `${post.postAt}`),
+          {
+            title,
+            detail,
+          }
+        );
       }
     });
     window.location.hash = `#/detailpage/:${ATAT}`;
