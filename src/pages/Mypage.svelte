@@ -34,37 +34,41 @@
   $: posts = [];
   $: users = [];
 
+  let selected_user;
   let user_name;
   let user_desc;
   let user_imgUrl;
 
   const db = getDatabase();
-  const postRef = ref(db, "posts/");
-  const userRef = ref(db, "users/");
+  let postRef;
+  let userRef = ref(db, "users/");
 
-  onMount(() => {
+  const handleSelectChange = (event) => {
+    selected_user = event.target.value;
+    postRef = ref(db, "posts/" + selected_user);
+    let selectedUserRef = ref(db, "users" + "/" + selected_user);
+    onValue(selectedUserRef, (snapshot) => {
+      const data_user = snapshot.val();
+      user_name = data_user.user_name;
+      user_desc = data_user.user_desc;
+      user_imgUrl = data_user.imgUrl;
+    });
     onValue(postRef, (snapshot) => {
       const data = snapshot.val();
-      if (data !== null) {
+      if (data != null) {
         posts = Object.values(data).reverse();
       }
     });
+  };
+
+  onMount(() => {
     onValue(userRef, (snapshot) => {
       const data_user = snapshot.val();
       if (data_user !== null) {
         users = Object.values(data_user);
       }
-      user_name = users[0].name;
-      user_desc = users[0].desc;
-      user_imgUrl = users[0].imgUrl;
     });
   });
-
-  const handleReload = () => {
-    // window.location.reload();
-    const btn = document.querySelector(".reloading-btn");
-    btn.innerHTML = null;
-  };
 </script>
 
 <Timebar />
@@ -74,8 +78,11 @@
     <div class="id-bar">
       <div class="id-bar__idBox">
         <!-- <div class="idBox-id">wade_wave</div> -->
-        <select name="pets" id="idBox-id">
-          <option value="">wade_wave</option>
+        <select name="ids" id="ids" on:change={handleSelectChange}>
+          <option value=" ">선택해주세요</option>
+          {#each users as user}
+            <option value={user.user_id}>{user.user_id}</option>
+          {/each}
         </select>
         <div class="idBox-icons">
           <!-- <img src="assets/arrow.svg" alt="" /> -->
@@ -237,8 +244,14 @@
     border: none;
     font-size: 20px;
     font-weight: 700;
+    border-radius: 0%;
   }
   select:hover {
     opacity: 0.5;
+  }
+  option {
+    font-weight: 400;
+    background-color: orangered;
+    color: white;
   }
 </style>

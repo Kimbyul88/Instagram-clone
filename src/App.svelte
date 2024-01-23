@@ -5,7 +5,7 @@
   import NotFound from "./pages/Notfound.svelte";
   import Router from "svelte-spa-router";
   import Detailpage from "./routes/Detailpage.svelte";
-
+  import Signup from "./pages/Signup.svelte";
   import { wrap } from "svelte-spa-router/wrap";
   import "./css/style.css";
   import Editpage from "./routes/Editpage.svelte";
@@ -15,6 +15,7 @@
 
   const routes = {
     "/": Mypage,
+    "/signup": Signup,
     "/mypage": Mypage,
     "/write": Write,
     "/profileedit": ProfileEdit,

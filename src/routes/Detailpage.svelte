@@ -226,6 +226,7 @@
     position: fixed;
     bottom: 0;
     left: 5vw;
+    margin-bottom: 5px;
   }
   #nickname {
     width: 15vw;
@@ -367,6 +368,7 @@
       sans-serif;
     margin-left: 0px;
     margin-top: 30px;
+    overflow: hidden;
   }
   .detail-infobar {
     display: flex;

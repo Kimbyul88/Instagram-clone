@@ -42,6 +42,8 @@
     justify-content: space-between;
     align-items: center;
     height: 20px;
+    width: 100%;
+    background-color: white;
   }
   .time-bar__time {
     font-size: 12px;

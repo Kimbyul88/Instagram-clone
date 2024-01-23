@@ -6,6 +6,7 @@
     push,
     set,
     remove,
+    onValue,
   } from "firebase/database";
   import {
     getStorage,
@@ -14,6 +15,9 @@
     getDownloadURL,
   } from "firebase/storage";
   import Timebar from "./Timebar.svelte";
+  import { onMount } from "svelte";
+
+  $: users = [];
 
   let title;
   let writer;
@@ -24,7 +28,7 @@
   const db = getDatabase();
   //**************************************************************
   const storage = getStorage();
-  const storageRef = refImage(storage, "/imgs");
+  let userRef = ref(db, "users/");
 
   const uploadFile = async () => {
     const file = files[0];
@@ -36,7 +40,7 @@
   };
   //**************************************************************
   function writeUserData(imgUrl) {
-    update(ref(db, "posts/" + writer + postAt), {
+    update(ref(db, "posts/" + `${writer}/` + postAt), {
       title,
       writer,
       postAt,
@@ -50,6 +54,14 @@
     const url = await uploadFile();
     writeUserData(url);
   };
+  onMount(() => {
+    onValue(userRef, (snapshot) => {
+      const data_user = snapshot.val();
+      if (data_user !== null) {
+        users = Object.values(data_user);
+      }
+    });
+  });
 </script>
 
 <Timebar />
@@ -78,7 +90,7 @@
       bind:value={title}
     />
   </div>
-  <div>
+  <!-- <div>
     <label for="writer">작성자</label>
     <input
       type="text"
@@ -87,7 +99,14 @@
       placeholder="작성자 이름(아이디)을 입력해주세요"
       bind:value={writer}
     />
-  </div>
+  </div> -->
+  <label for="writer">작성자</label>
+  <select name="writer" id="writer" bind:value={writer}>
+    <option value=" ">선택해주세요</option>
+    {#each users as user}
+      <option value={user.user_id}>{user.user_id}</option>
+    {/each}
+  </select>
   <div>
     <label for="detail">설명</label>
     <textarea
