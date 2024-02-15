@@ -208,6 +208,8 @@
     cursor: pointer;
   }
   .gallery {
+    height: 60vh;
+    overflow-y: scroll;
     position: relative;
     transform: translate(0, 40px);
     max-width: 100vw;
